@@ -8,7 +8,7 @@ use warnings;
 
     our @ISA = ();
 
-    sub times { 100 };
+    sub times { 10 };
     sub name { 'testbench' }
     sub run_benchmark { 
         my ($class, $perl_info) = @_;

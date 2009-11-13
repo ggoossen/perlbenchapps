@@ -71,13 +71,9 @@ sub run_benchmark {
             my $average = $item->{sum} / $item->{count};
             my $variance = ($item->{sum_sq} / ($item->{count}-1))
               - ($item->{count}/($item->{count}-1)) * $average**2;
-            my $variance_variance = ($item->{sum_sq_sq} / $item->{count}) - ($average**2)**2;
-            my $uncertainty_variance = sqrt($variance_variance / ($item->{count}-1));
             my $uncertainty = sqrt($variance / ($item->{count}-1));
-            # warn "$item->{sum} - $item->{sum_sq} - $average - $variance - $uncertainty_variance - $uncertainty";
             %{$item} = ( average => $average,
                          uncertainty => $uncertainty,
-                         uncertain => ($uncertainty_variance > $variance),
                      );
         }
     }
@@ -107,9 +103,6 @@ sub report_from_result {
             my $acc = - POSIX::floor(log( $r->{uncertainty} / ($r->{average}) )/log(10.0));
 
             $report .= "  $perl: ";
-            if ($r->{uncertain}) {
-                $report .= "*uncertain* ";
-            }
             $report .= sprintf "%.${acc}f(%d)*10^%d\n",
               $b_avg, floor(0.5 + $r->{uncertainty} / (10**($base-$acc))), $base;
         }
