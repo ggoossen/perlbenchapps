@@ -1,0 +1,43 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+#use t::mech;
+use Net::HTTP;
+
+use Benchmark qw':hireswallclock timeit';
+
+#my $www = t::mech->new();
+
+my @pages = (
+             { name => "homepage",    host => "www.perlfoundation.org", path => "/"       },
+             { name => "grants",      host => "www.perlfoundation.org", path => "/grants" },
+             );
+if ($ARGV[0] and $ARGV[0] eq "config") {
+    print <<CONFIG;
+graph_title Page server time (ms)
+graph_args --base 1000 --upper-limit 1000 -l 0
+graph_scale noserver_status
+CONFIG
+
+    for (@pages) { 
+        print <<CONFIG;
+$_->{name}.label $_->{name}
+$_->{name}.type GAUGE
+$_->{name}.min 0
+$_->{name}.info $_->{name}
+CONFIG
+    }
+
+    exit;
+}
+
+for my $page (@pages) {
+    my $dt = timeit(1, sub {
+            my $con = Net::HTTP->new(Host => $page->{host}) || die "no conn?: $!";
+            $con->write_request(GET => $page->{path}, Host => $page->{host}) ; $con->read_response_headers; $con->read_entity_body();
+    });
+    $dt = int($dt->[0] * 1000);
+    print "$page->{name}.value $dt\n";
+}

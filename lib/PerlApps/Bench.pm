@@ -11,7 +11,7 @@ use File::Spec ();
 use Perl6::Form;
 use POSIX;
 
-my @tests = qw(PerlCritic);
+my @tests = qw(PerlCritic Lcov LwpRequest NetHttpGet NetHttpGetConfig Perldoc Spamassassin Spamd);
 
 sub tests {
     return map { "PerlApps::Bench::App::$_" } @tests;
@@ -23,14 +23,17 @@ sub extract_perl_setup {
     my ($perlbin) = @_;
     my ($volume, $path, $filename) = File::Spec->splitpath($perlbin);
     my $binpath = File::Spec->catpath($volume, $path);
-    return { binpath => $binpath, perlbin => $perlbin, name => $new_name++ };
+    open(my $fh, '-|', $perlbin, '-e', q[use Config %Config; print $Config{version}]) or die;
+    my $version = <$fh>;
+    close $fh or die;
+    return { binpath => $binpath, perlbin => $perlbin, name => $new_name++, version => $version };
 }
 
 sub run_benchmark {
     my %options = @_;
 
     my $times = $options{'times'};
-    my @tests = $options{'benchmarks'};
+    my @tests = @{ $options{'benchmarks'} };
     my @perls = @{ $options{perl} };
     my $rootdir = cwd();
     my $res = {};
@@ -100,7 +103,7 @@ sub report_from_result {
 
             my $b_avg = $r->{average} / 10.0**$base;
 
-            my $acc = - POSIX::floor(log( $r->{uncertainty} / ($r->{average}) )/log(10.0));
+            my $acc = - POSIX::floor(log( $r->{uncertainty} / (2 * 10**$base) )/log(10.0));
 
             $report .= "  $perl: ";
             $report .= sprintf "%.${acc}f(%d)*10^%d\n",

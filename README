@@ -1,0 +1,13 @@
+README
+......
+
+Benchmark using application, requires that certain CPAN modules are
+installed. Other requirements may also apply (benchmarks can be
+disabled if they won't work on your platform/system).
+
+Measures only run-times without doing any kind of correction, thus
+results can only be compared between the different perls in the same
+run. Running the same benchmark again might produce different results
+outside of the error range.
+
+Output is the average run-time with between brackets the error.
