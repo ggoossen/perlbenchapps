@@ -1,4 +1,4 @@
-package PerlApps::Bench::App::Spamd;
+package PerlBenchApps::AppController::Spamd;
 
 use strict;
 use warnings;

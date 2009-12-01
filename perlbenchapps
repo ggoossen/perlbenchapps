@@ -1,0 +1,49 @@
+#! perl
+
+use strict;
+use warnings;
+
+=head1
+
+Install perl, plus add required modules:
+
+    cpan Perl::Critic Net::DNS XML::XPath Mail::SpamAssassin Carp::Assert
+
+Program two compare the relative performance of different version of
+perl. This benchmark usage real world application to measure the
+performance, because of this it requires that certain CPAN modules are
+installed.
+
+Benchmark using application, requires that certain CPAN modules are
+installed. Other requirements may also apply (benchmarks can be
+disabled if they won't work on your platform/system).
+
+Measures only run-times without doing any kind of correction, thus
+results can only be compared between the different perls in the same
+run. Running the same benchmark again might produce different results
+outside of the error range.
+
+Output is the average run-time with between brackets the error.
+
+=cut
+
+use Scriptalicious;
+use PerlBenchApps::Controller;
+
+my (@perl, $times);
+Getopt::Long::Configure("no_bundling");
+getopt( "perl:s{,}" => \@perl, "times=i", \$times );
+
+my @perl_infos = map { PerlBenchApps::Controller::extract_perl_setup($_) } @perl;
+
+my @tests = PerlBenchApps::Controller::tests();
+for (@tests) {
+    eval "require $_" or die;
+}
+
+my $result = PerlBenchApps::Controller::run_benchmark( perl => \@perl_infos,
+                                                       times => $times,
+                                                       benchmarks => [@tests],
+                                                   );
+
+print PerlBenchApps::Controller::report_from_result($result);

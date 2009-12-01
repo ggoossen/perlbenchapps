@@ -1,4 +1,4 @@
-package PerlApps::Bench;
+package PerlBenchApps::Controller;
 
 use strict;
 use warnings;
@@ -14,7 +14,7 @@ use POSIX;
 my @tests = qw(PerlCritic Lcov LwpRequest NetHttpGet NetHttpGetConfig Perldoc Spamassassin Spamd);
 
 sub tests {
-    return map { "PerlApps::Bench::App::$_" } @tests;
+    return map { "PerlBenchApps::AppController::$_" } @tests;
 }
 
 our $new_name = "A";

@@ -1,4 +1,4 @@
-package PerlApps::Bench::App::Lcov;
+package PerlBenchApps::AppController::Lcov;
 
 use strict;
 use warnings;
@@ -6,7 +6,7 @@ use warnings;
 use File::Temp qw(tempfile);
 
 sub times {
-    return 1;
+    return 10;
 }
 
 sub name {

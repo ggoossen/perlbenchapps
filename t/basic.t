@@ -24,11 +24,11 @@ use Test::More 'no_plan';
 use Scriptalicious ();
 $Scriptalicious::VERBOSE = -1;
 
-use PerlApps::Bench;
+use PerlBenchApps::Controller;
 
-*extract_perl_setup = \&PerlApps::Bench::extract_perl_setup;
-*run_benchmark = \&PerlApps::Bench::run_benchmark;
-*report_from_result = \&PerlApps::Bench::report_from_result;
+*extract_perl_setup = \&PerlBenchApps::Controller::extract_perl_setup;
+*run_benchmark = \&PerlBenchApps::Controller::run_benchmark;
+*report_from_result = \&PerlBenchApps::Controller::report_from_result;
 
 my $perl_info = extract_perl_setup( $^X );
 ok( -e $perl_info->{perlbin} );
@@ -39,7 +39,7 @@ my $perl_info_2 = extract_perl_setup( $^X );
 
 my $result = run_benchmark( perl => [$perl_info],
                             times => 10,
-                            benchmarks => 'TestBench',
+                            benchmarks => ['TestBench'],
                         );
 
 ok( $result->{'testbench'} );
@@ -50,7 +50,7 @@ ok( $result->{'testbench'}{$perl_info->{name}}{uncertainty} );
 for (1..5) {
     my $result2 = run_benchmark( perl => [$perl_info, $perl_info_2],
                                  times => 10,
-                                 benchmarks => 'TestBench',
+                                 benchmarks => ['TestBench'],
                              );
     my $test_res_1 = $result2->{'testbench'}{$perl_info->{name}};
     my $test_res_2 = $result2->{'testbench'}{$perl_info_2->{name}};
@@ -77,6 +77,6 @@ $result = {
 my $report = report_from_result( $result );
 is($report, <<'EXPECT');
 testbench
-  A: 0.244(1)*10^-2
+  A: 0.2438(9)*10^-2
   B: 2.5072(15)*10^-2
 EXPECT

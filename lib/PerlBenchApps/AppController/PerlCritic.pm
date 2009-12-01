@@ -1,10 +1,10 @@
-package PerlApps::Bench::App::PerlCritic;
+package PerlBenchApps::AppController::PerlCritic;
 
 use strict;
 use warnings;
 
 sub times {
-    return 1;
+    return 10;
 }
 
 sub name {
