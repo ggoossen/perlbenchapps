@@ -8,8 +8,9 @@ use List::Util qw[shuffle max];
 use Cwd qw[cwd];
 use Time::HiRes qw|tv_interval gettimeofday|;
 use File::Spec ();
-use Perl6::Form;
-use POSIX;
+use POSIX qw(floor);
+
+use version; our $VERSION = qv("v0.1");
 
 my @tests = qw(PerlCritic Lcov LwpRequest NetHttpGet NetHttpGetConfig Perldoc Spamassassin Spamd);
 
@@ -92,7 +93,7 @@ sub report_from_result {
         my $bench_res = $result->{$benchname};
 
         my $base = max map {
-            POSIX::floor( log($_->{average})/log(10.0) )
+            floor( log($_->{average})/log(10.0) )
           } values %{$bench_res};
 
         $report .= "$benchname\n";
@@ -103,7 +104,7 @@ sub report_from_result {
 
             my $b_avg = $r->{average} / 10.0**$base;
 
-            my $acc = - POSIX::floor(log( $r->{uncertainty} / (2 * 10**$base) )/log(10.0));
+            my $acc = - floor(log( $r->{uncertainty} / (2 * 10**$base) )/log(10.0));
 
             $report .= "  $perl: ";
             $report .= sprintf "%.${acc}f(%d)*10^%d\n",
