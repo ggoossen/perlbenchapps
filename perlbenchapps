@@ -6,7 +6,7 @@ use warnings;
 =head1 SYNOPSIS
 
 perlbenchapps is a program two compare the relative performance of
-different versions of perl.
+different revisions of perl.
 
 =head1 USAGE
 

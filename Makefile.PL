@@ -12,5 +12,5 @@ WriteMakefile (
         'Scriptalicious'            => 0,
     },
     AUTHOR          => 'Gerard Goossen <gerard[at]ggoossen.net>',
-    ABSTRACT        => 'Compare relative performances of different versions of perl',
+    ABSTRACT        => 'Compare relative performances of different revisions of perl',
 );
