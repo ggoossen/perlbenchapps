@@ -3,27 +3,46 @@
 use strict;
 use warnings;
 
-=head1
+=head1 SYNOPSIS
 
-Install perl, plus add required modules:
+perlbenchapps is a program two compare the relative performance of
+different versions of perl.
+
+=head1 USAGE
+
+    perlbenchapps --perl my-perl-vX.X/bin/perl my-perl-vX.Y/perl
+
+=head1 REQUIREMENTS
+
+Because the benchmark are application which require modules, the
+perls being benchmarked must have the requried CPAN modules
+installed. If you don't want the results to be influenced by having
+different versions of CPAN modules make sure all the perls have the
+same modules installed.  For the current benchmarks the required CPAN
+modules can be installed by:
 
     cpan Perl::Critic Net::DNS XML::XPath Mail::SpamAssassin Carp::Assert
 
-Program two compare the relative performance of different version of
-perl. This benchmark usage real world application to measure the
-performance, because of this it requires that certain CPAN modules are
-installed.
+=head1 INTERPRETING RESULTS
 
-Benchmark using application, requires that certain CPAN modules are
-installed. Other requirements may also apply (benchmarks can be
-disabled if they won't work on your platform/system).
+Output is the average run-time with between brackets the error
+relative to the last digits of the results, thus C<2.5072(15)*10^-2>
+means C<0.025072 +/- 0.000015>
 
 Measures only run-times without doing any kind of correction, thus
 results can only be compared between the different perls in the same
 run. Running the same benchmark again might produce different results
 outside of the error range.
 
-Output is the average run-time with between brackets the error.
+=head1 ADDING NEW BENCHMARKS
+
+New benchamrks can be added by creating a
+PerlBenchApps::AppController::<NAME> module. Which should implement a
+C<times>, C<name> and C<run_benchmark> routine. The C<run_benchmark>
+routines is the routine being executing and being times, note that
+this routine is run from the controlle perl and should start its
+process of the application to be benchmark using the perl which is
+being benchmarked.
 
 =cut
 
