@@ -37,7 +37,7 @@ outside of the error range.
 =head1 ADDING NEW BENCHMARKS
 
 New benchamrks can be added by creating a
-PerlBenchApps::AppController::<NAME> module. Which should implement a
+C<< PerlBenchApps::AppController::<NAME> >> module. Which should implement a
 C<times>, C<name> and C<run_benchmark> routine. The C<run_benchmark>
 routines is the routine being executing and being times, note that
 this routine is run from the controlle perl and should start its
