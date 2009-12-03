@@ -49,20 +49,30 @@ being benchmarked.
 use Scriptalicious;
 use PerlBenchApps::Controller;
 
-my (@perl, $times);
+my (@perl, $times, @benchmark);
 Getopt::Long::Configure("no_bundling");
-getopt( "perl:s{,}" => \@perl, "times=i", \$times );
+getopt( "perl:s{,}" => \@perl, "times=i", \$times, "benchmark=s{,}", \@benchmark );
 
 my @perl_infos = map { PerlBenchApps::Controller::extract_perl_setup($_) } @perl;
 
-my @tests = PerlBenchApps::Controller::tests();
-for (@tests) {
+for (@perl_infos) {
+    print "$_->{name} = $_->{perlbin}\n";
+}
+print "\n";
+
+if (not @benchmark) {
+    @benchmark = PerlBenchApps::Controller::tests();
+}
+
+for (@benchmark) {
     eval "require $_" or die;
 }
 
+$times ||= 10;
+
 my $result = PerlBenchApps::Controller::run_benchmark( perl => \@perl_infos,
                                                        times => $times,
-                                                       benchmarks => [@tests],
+                                                       benchmarks => [@benchmark],
                                                    );
 
 print PerlBenchApps::Controller::report_from_result($result);

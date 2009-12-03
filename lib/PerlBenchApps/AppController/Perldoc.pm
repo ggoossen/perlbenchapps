@@ -14,10 +14,13 @@ sub name {
 sub run_benchmark {
     my ($class, $perl_info) = @_;
 
-    my $res = `$perl_info->{perlbin} $perl_info->{binpath}/perldoc$perl_info->{version} -onroff data/perlfunc.pod`;
+    local $ENV{PERLDOC_POD2} = "";
+    my $perldoc = "$perl_info->{binpath}/perldoc$perl_info->{version}";
+    $perldoc = "$perl_info->{binpath}/perldoc" if not -e $perldoc;
+    my $res = `$perl_info->{perlbin} $perldoc -onroff data/perlfunc.pod`;
     my $lines = $res =~ tr/\n//c;
     if ( $lines < 340000 ) {
-        die "Unexpected output lines: $lines";
+        die "Unexpected output lines: $lines by $perl_info->{name}";
     }
     return;
 }
